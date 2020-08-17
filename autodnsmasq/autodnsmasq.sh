@@ -4,7 +4,7 @@
 # 
 # maintenance/documentation infos:
 # author="mario33881"
-# version="01_01 2020-01-18"
+# version="01_02 2020-08-16"
 
 # Bash "strict mode" - http://redsymbol.net/articles/unofficial-bash-strict-mode/
 # -e          : exit with non-0 status 
@@ -71,9 +71,12 @@ config_dnsmasq(){
     sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 
     # Configure dnsmasq
-    echo 'interface=wlan0 # Use the require wireless interface' | sudo tee -a "${dnsmasq_conf}" > /dev/null
-    echo 'domain-needed # Never forward plain names (without a dot or domain part)' | sudo tee -a "${dnsmasq_conf}" > /dev/null
-    echo 'bogus-priv # Never forward addresses in the non-routed address spaces' | sudo tee -a "${dnsmasq_conf}" > /dev/null
+    echo '# Use the require wireless interface' | sudo tee -a "${dnsmasq_conf}" > /dev/null
+    echo 'interface=wlan0' | sudo tee -a "${dnsmasq_conf}" > /dev/null
+    echo '# Never forward plain names (without a dot or domain part)' | sudo tee -a "${dnsmasq_conf}" > /dev/null
+    echo 'domain-needed' | sudo tee -a "${dnsmasq_conf}" > /dev/null
+    echo '# Never forward addresses in the non-routed address spaces' | sudo tee -a "${dnsmasq_conf}" > /dev/null
+    echo 'bogus-priv' | sudo tee -a "${dnsmasq_conf}" > /dev/null
 
     echo "# If you don't want dnsmasq to read /etc/resolv.conf or any other" | sudo tee -a "${dnsmasq_conf}" > /dev/null
     echo "# file, getting its servers from this file instead (see below), then" | sudo tee -a "${dnsmasq_conf}" > /dev/null

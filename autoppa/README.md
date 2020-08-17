@@ -47,6 +47,12 @@ di creare e modificare database)
 
 ## Changelog
 
+**2020-08-16 01_02:**
+
+* Fix "gpg: keyserver refresh failed: No keyserver available" (added keyservers)
+* Fix Permission errors
+* Updated PHPMyAdmin version
+
 **2020-01-18 01_01:**
 
 First commit

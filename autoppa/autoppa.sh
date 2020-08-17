@@ -4,7 +4,7 @@
 #
 # maintenance/documentation infos:
 # author="mario33881"
-# version="01_01 2020-01-17"
+# version="01_02 2020-08-16"
 #
 
 # Bash "strict mode" - http://redsymbol.net/articles/unofficial-bash-strict-mode/
@@ -23,7 +23,7 @@ source "$(dirname "$0")/../utils/apt.sh"     # defines update and upgrade functi
 
 # -- VARIABLES
 logfile="autoppa.log" # script log file
-ppa_version="4.8.4"   # phpmyadmin version
+ppa_version="4.9.5"   # phpmyadmin version
 
 # -- FUNCTIONS
 
@@ -35,7 +35,7 @@ download_ppa(){
     logger "PHPMYADMIN" "Downloading and extracting phpmyadmin..." true "${logfile}"
 	
     wget "https://files.phpmyadmin.net/phpMyAdmin/${ppa_version}/phpMyAdmin-${ppa_version}-all-languages.tar.gz"
-	tar -zxvf  "phpMyAdmin-${ppa_version}-all-languages.tar.gz"
+    tar -zxvf  "phpMyAdmin-${ppa_version}-all-languages.tar.gz"
 
     logger "PHPMYADMIN" "Done downloading and extracting phpmyadmin" true "${logfile}"
 }
@@ -59,14 +59,14 @@ verify_gpg(){
     trap 'logger "PHPMYADMIN" "Failed verifying signature" "false" "${logfile}" "${?}"' ERR
     
     logger "PHPMYADMIN" "Verifying signature..." true "${logfile}"
-	
+
     wget "https://files.phpmyadmin.net/phpMyAdmin/${ppa_version}/phpMyAdmin-${ppa_version}-all-languages.tar.gz.asc"
-	wget https://files.phpmyadmin.net/phpmyadmin.keyring
-	gpg --import phpmyadmin.keyring
-	gpg --keyserver hkp://pgp.mit.edu --recv-keys 3D06A59ECE730EB71B511C17CE752F178259BD92
-	gpg --tofu-policy good CE752F178259BD92
-	gpg --trust-model tofu --verify "phpMyAdmin-${ppa_version}-all-languages.tar.gz.asc"
-    
+    wget https://files.phpmyadmin.net/phpmyadmin.keyring
+    gpg --import phpmyadmin.keyring
+    gpg --keyserver hkps://pgp.mit.edu --keyserver ha.pool.sks-keyservers.net --keyserver hkp://p80.pool.sks-keyservers.net:80 --keyserver keyserver.ubuntu.com  --recv-keys 3D06A59ECE730EB71B511C17CE752F178259BD92
+    gpg --tofu-policy good CE752F178259BD92
+    gpg --trust-model tofu --verify "phpMyAdmin-${ppa_version}-all-languages.tar.gz.asc"
+
     logger "PHPMYADMIN" "Done verifying signature" true "${logfile}"
 }
 
@@ -77,7 +77,7 @@ install_ppa(){
     
     logger "PHPMYADMIN" "Installing phpmyadmin..." true "${logfile}"
 	
-    mv "phpMyAdmin-${ppa_version}-all-languages" /var/www/html/phpmyadmin
+    sudo mv "phpMyAdmin-${ppa_version}-all-languages" /var/www/html/phpmyadmin
     
     logger "PHPMYADMIN" "Done installing phpmyadmin" true "${logfile}"
 }
@@ -89,7 +89,7 @@ setpermissions(){
     
     logger "PHPMYADMIN" "Setting www-data permissions..." true "${logfile}"
 	
-    chown www-data.www-data /var/www/html/phpmyadmin/* -R
+    sudo chown www-data.www-data /var/www/html/phpmyadmin/* -R
     
     logger "PHPMYADMIN" "Done setting www-data permissions" true "${logfile}"
 }
@@ -148,7 +148,7 @@ config_ppa(){
     # Create phpmyadmin's temp folder
     sudo mkdir -p /var/lib/phpmyadmin/tmp
     sudo chown -R www-data:www-data /var/lib/phpmyadmin
-    echo "\$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';" >> "${configfile_path}"
+    echo "\$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';" | sudo tee -a "${configfile_path}" > /dev/null
 
     logger "PHPMYADMIN" "Creating phpmyadmin's database and user..." true "${logfile}"
 

@@ -41,6 +41,10 @@ Avvia il servizio di dnsmasq
 
 ## Changelog
 
+**2020-08-16 01_02:**
+
+* Moved comments from the right side of commands to the line above it (caused issues with DNS resolutions)
+
 **2020-01-18 01_01:**
 
 First commit
